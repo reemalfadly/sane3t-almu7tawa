@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>استبيان هوية صانعة المحتوى</title>
+  <style>
+    :root {
+      --bg: #f7f3ee;
+      --card: #fffdf9;
+      --border: #e7ddd1;
+      --text: #2b2118;
+      --muted: #7a6c5d;
+      --accent: #c96f4a;
+      --accent-dark: #a75635;
+      --chip: #f5ede4;
+      --chip-active: #c96f4a;
+      --chip-active-text: #ffffff;
+      --shadow: 0 8px 24px rgba(0,0,0,0.06);
+      --radius: 18px;
+      --success: #2f7d57;
+    }
+
+    * { box-sizing: border-box; font-family: "Segoe UI", Tahoma, Arial, sans-serif; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .wrap { max-width: 1180px; margin: 0 auto; }
+
+    .hero {
+      background: linear-gradient(180deg, #fffaf4 0%, #f9f2e9 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero h1 { margin: 0 0 10px; font-size: 34px; line-height: 1.2; }
+    .hero p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.9; }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
+    .section-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
+    .field-label { display: block; font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+    .hint { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 15px;
+      outline: none;
+      resize: vertical;
+    }
+
+    textarea { min-height: 100px; line-height: 1.8; }
+
+    input[type="text"]:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(201,111,74,0.12);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      border: 1px solid var(--border);
+      background: var(--chip);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.18s ease;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .chip:hover { transform: translateY(-1px); }
+
+    .chip.active {
+      background: var(--chip-active);
+      border-color: var(--chip-active);
+      color: var(--chip-active-text);
+    }
+
+    .other-box {
+      margin-top: 12px;
+      display: none;
+    }
+
+    .toolbar {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(to top, var(--bg) 68%, rgba(247,243,238,0));
+      padding-top: 14px;
+      margin-top: 12px;
+    }
+
+    .toolbar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 16px;
+      padding: 15px 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-dark); }
+    .btn-secondary { background: #fff; border: 1px solid var(--border); color: var(--text); }
+    .btn-secondary:hover { background: #faf6f1; }
+
+    .status {
+      margin-top: 12px;
+      color: var(--success);
+      font-size: 14px;
+      display: none;
+    }
+
+    .output {
+      margin-top: 18px;
+      background: #fff;
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      display: none;
+      white-space: pre-wrap;
+      line-height: 1.95;
+      font-size: 15px;
+    }
+
+    .progress-wrap {
+      margin: 18px 0 22px;
+      background: #efe5d8;
+      border-radius: 999px;
+      overflow: hidden;
+      height: 12px;
+      border: 1px solid #eadbc8;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #c96f4a, #d88663);
+      transition: width 0.25s ease;
+    }
+
+    .progress-label {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .toolbar-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 14px; }
+      .hero h1 { font-size: 28px; }
+      .section-title { font-size: 20px; }
+      .toolbar-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>استبيان هوية صانعة المحتوى</h1>
+      <p>
+        عبّئي هذا الاستبيان مرة واحدة فقط حتى تحفظ <strong>صانعة المحتوى</strong> هويتك: النيش، الجمهور، اللهجة، النبرة، المنصات، والثيم العام.
+        بعد ذلك يصبح كل طلب محتوى أقرب لهويتك وأسرع في التنفيذ.
+      </p>
+
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">نسبة اكتمال الهوية: 0%</div>
+    </div>
+
+    <div class="section">
+      <label class="field-label" for="instagram">اسم حسابك على إنستقرام</label>
+      <div class="hint">اختياري لكنه مفيد لتخصيص النبرة والهوية</div>
+      <input type="text" id="instagram" placeholder="@yourhandle" />
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">1) نيشك</h2>
+      <div class="section-subtitle">اختاري مجال المحتوى الأساسي</div>
+      <div class="chips" data-group="niche" data-multi="false">
+        <div class="chip">تقنية وذكاء اصطناعي</div>
+        <div class="chip">استثمار ومال</div>
+        <div class="chip">تطوير ذات</div>
+        <div class="chip">ريادة أعمال</div>
+        <div class="chip">رياضة ولياقة</div>
+        <div class="chip">طبخ وأكل</div>
+        <div class="chip">سفر وسياحة</div>
+        <div class="chip">تعليم</div>
+        <div class="chip">ترفيه</div>
+        <div class="chip chip-other" data-other-target="nicheOther">أخرى</div>
+      </div>
+      <div class="other-box" id="nicheOtherBox">
+        <input type="text" id="nicheOther" placeholder="اكتبي النيش هنا" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">2) جمهورك</h2>
+      <div class="section-subtitle">اختاري كل ما ينطبق</div>
+      <div class="chips" data-group="audience" data-multi="true">
+        <div class="chip">شباب 18-24</div>
+        <div class="chip">بالعمر 25-35</div>
+        <div class="chip">مهنيون وموظفون</div>
+        <div class="chip">رجال أعمال</div>
+        <div class="chip">طلاب</div>
+        <div class="chip">عائلات</div>
+        <div class="chip chip-other" data-other-target="audienceOther">أخرى</div>
+      </div>
+      <div class="other-box" id="audienceOtherBox">
+        <input type="text" id="audienceOther" placeholder="اكتبي جمهورًا آخر" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">3) لهجتك</h2>
+      <div class="section-subtitle">اختيار واحد</div>
+      <div class="chips" data-group="dialect" data-multi="false">
+        <div class="chip">سعودية</div>
+        <div class="chip active">كويتية</div>
+        <div class="chip">إماراتية</div>
+        <div class="chip">مصرية</div>
+        <div class="chip">خليجية عامة</div>
+        <div class="chip">فصحى مبسطة</div>
+        <div class="chip chip-other" data-other-target="dialectOther">أخرى</div>
+      </div>
+      <div class="other-box" id="dialectOtherBox">
+        <input type="text" id="dialectOther" placeholder="اكتبي اللهجة" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">4) نبرة محتواك</h2>
+      <div class="section-subtitle">اختاري كل ما ينطبق</div>
+      <div class="chips" data-group="tone" data-multi="true">
+        <div class="chip">رسمي وموضوعي</div>
+        <div class="chip active">ودّي وقريب</div>
+        <div class="chip">جريء ومباشر</div>
+        <div class="chip active">تعليمي وشارح</div>
+        <div class="chip">ساخر وخفيف</div>
+        <div class="chip">ملهم وتحفيزي</div>
+        <div class="chip chip-other" data-other-target="toneOther">أخرى</div>
+      </div>
+      <div class="other-box" id="toneOtherBox">
+        <input type="text" id="toneOther" placeholder="اكتبي نبرة إضافية" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">5) منصاتك</h2>
+      <div class="section-subtitle">اختاري كل ما ينطبق</div>
+      <div class="chips" data-group="platforms" data-multi="true">
+        <div class="chip active">انستقرام</div>
+        <div class="chip">تيك توك</div>
+        <div class="chip">تويتر / X</div>
+        <div class="chip">يوتيوب</div>
+        <div class="chip">لينكدإن</div>
+        <div class="chip">سناب شات</div>
+        <div class="chip chip-other" data-other-target="platformOther">أخرى</div>
+      </div>
+      <div class="other-box" id="platformOtherBox">
+        <input type="text" id="platformOther" placeholder="اكتبي منصة إضافية" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">6) ثيم ألوانك</h2>
+      <div class="section-subtitle">اختيار واحد أو اكتبي ثيمك الخاص</div>
+      <div class="chips" data-group="theme" data-multi="false">
+        <div class="chip active">ستايل Claude — بيج وبرتقالي</div>
+        <div class="chip">داكن ذهبي</div>
+        <div class="chip">أبيض نظيف</div>
+        <div class="chip">أزرق مؤسسي</div>
+        <div class="chip">أسود تقني</div>
+        <div class="chip chip-other" data-other-target="themeOther">ألواني الخاصة</div>
+      </div>
+      <div class="other-box" id="themeOtherBox">
+        <input type="text" id="themeOther" placeholder="مثال: تركواز + ذهبي + أسود" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">7) ملاحظات إضافية عن الهوية</h2>
+      <div class="section-subtitle">اختياري — أي معلومات تساعد صانعة المحتوى على فهم أسلوبك أكثر</div>
+      <textarea id="identityNotes" placeholder="مثال: أحب المحتوى العملي المباشر، وأفضّل أن تكون الأمثلة من السوق الخليجي، ولا أحب الحشو أو الإطالة."></textarea>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-grid">
+        <button class="btn btn-primary" id="saveBtn">احفظ هويتي</button>
+        <button class="btn btn-secondary" id="copyBtn">نسخ الملخص</button>
+        <button class="btn btn-secondary" id="draftBtn">حفظ محلي</button>
+        <button class="btn btn-secondary" id="resetBtn">إعادة تعيين</button>
+      </div>
+      <div class="status" id="statusMsg"></div>
+    </div>
+
+    <div class="output" id="outputBox"></div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'content_maker_identity_v1';
+    const groups = document.querySelectorAll('.chips');
+
+    function toggleOtherInput(chip, isActive) {
+      const target = chip.dataset.otherTarget;
+      if (!target) return;
+      const box = document.getElementById(target + 'Box');
+      if (!box) return;
+      box.style.display = isActive ? 'block' : 'none';
+    }
+
+    groups.forEach(group => {
+      const multi = group.dataset.multi === 'true';
+      const chips = group.querySelectorAll('.chip');
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          const isOther = chip.classList.contains('chip-other');
+
+          if (!multi) {
+            chips.forEach(c => {
+              c.classList.remove('active');
+              if (c.classList.contains('chip-other')) toggleOtherInput(c, false);
+            });
+            chip.classList.add('active');
+            if (isOther) toggleOtherInput(chip, true);
+          } else {
+            chip.classList.toggle('active');
+            if (isOther) toggleOtherInput(chip, chip.classList.contains('active'));
+          }
+
+          updateProgress();
+        });
+      });
+    });
+
+    function getGroupValues(groupName) {
+      const group = document.querySelector(`.chips[data-group="${groupName}"]`);
+      if (!group) return [];
+      const active = [...group.querySelectorAll('.chip.active')].map(el => el.textContent.trim());
+
+      const otherChip = group.querySelector('.chip-other.active');
+      if (otherChip) {
+        const otherTarget = otherChip.dataset.otherTarget;
+        const otherInput = document.getElementById(otherTarget);
+        const otherValue = otherInput?.value.trim();
+        if (otherValue) {
+          const index = active.findIndex(v => v === otherChip.textContent.trim());
+          if (index !== -1) active[index] = otherValue;
+        }
+      }
+
+      return active;
+    }
+
+    function formatValues(values) {
+      return values.length ? values.join('، ') : 'غير محدد';
+    }
+
+    function getIdentityData() {
+      return {
+        instagram: document.getElementById('instagram').value.trim() || 'غير محدد',
+        niche: getGroupValues('niche'),
+        audience: getGroupValues('audience'),
+        dialect: getGroupValues('dialect'),
+        tone: getGroupValues('tone'),
+        platforms: getGroupValues('platforms'),
+        theme: getGroupValues('theme'),
+        notes: document.getElementById('identityNotes').value.trim() || 'لا توجد ملاحظات إضافية'
+      };
+    }
+
+    function buildSummary(data) {
+      return `
+هوية صانعة المحتوى
+
+- اسم الحساب: ${data.instagram}
+- النيش: ${formatValues(data.niche)}
+- الجمهور: ${formatValues(data.audience)}
+- اللهجة: ${formatValues(data.dialect)}
+- نبرة المحتوى: ${formatValues(data.tone)}
+- المنصات: ${formatValues(data.platforms)}
+- ثيم الألوان / القالب: ${formatValues(data.theme)}
+- ملاحظات إضافية: ${data.notes}
+
+اعتمدي هذه البيانات كهوية ثابتة لصانعة المحتوى، وطبّقيها تلقائيًا عند تنفيذ أي طلب محتوى لاحق ما لم أطلب خلاف ذلك.
+      `.trim();
+    }
+
+    function updateProgress() {
+      const data = getIdentityData();
+      const checks = [
+        data.instagram !== 'غير محدد',
+        data.niche.length > 0,
+        data.audience.length > 0,
+        data.dialect.length > 0,
+        data.tone.length > 0,
+        data.platforms.length > 0,
+        data.theme.length > 0,
+        data.notes !== 'لا توجد ملاحظات إضافية'
+      ];
+
+      const done = checks.filter(Boolean).length;
+      const percent = Math.round((done / checks.length) * 100);
+
+      document.getElementById('progressBar').style.width = percent + '%';
+      document.getElementById('progressLabel').textContent = `نسبة اكتمال الهوية: ${percent}%`;
+    }
+
+    function showStatus(msg) {
+      const el = document.getElementById('statusMsg');
+      el.style.display = 'block';
+      el.textContent = msg;
+      setTimeout(() => { el.style.display = 'none'; }, 2500);
+    }
+
+    function saveDraft() {
+      const data = getIdentityData();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showStatus('تم حفظ بيانات الهوية محليًا داخل الصفحة.');
+    }
+
+    function loadDraft() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+
+        document.getElementById('instagram').value = data.instagram !== 'غير محدد' ? data.instagram : '';
+        document.getElementById('identityNotes').value = data.notes !== 'لا توجد ملاحظات إضافية' ? data.notes : '';
+
+        restoreGroup('niche', data.niche);
+        restoreGroup('audience', data.audience);
+        restoreGroup('dialect', data.dialect);
+        restoreGroup('tone', data.tone);
+        restoreGroup('platforms', data.platforms);
+        restoreGroup('theme', data.theme);
+
+        updateProgress();
+      } catch (e) {}
+    }
+
+    function restoreGroup(groupName, values = []) {
+      const group = document.querySelector(`.chips[data-group="${groupName}"]`);
+      if (!group) return;
+      const chips = [...group.querySelectorAll('.chip')];
+      chips.forEach(c => c.classList.remove('active'));
+
+      values.forEach(value => {
+        const exact = chips.find(c => c.textContent.trim() === value);
+        if (exact) {
+          exact.classList.add('active');
+        } else {
+          const otherChip = group.querySelector('.chip-other');
+          if (otherChip) {
+            otherChip.classList.add('active');
+            toggleOtherInput(otherChip, true);
+            const input = document.getElementById(otherChip.dataset.otherTarget);
+            if (input) input.value = value;
+          }
+        }
+      });
+
+      const otherChip = group.querySelector('.chip-other');
+      if (otherChip && !otherChip.classList.contains('active')) {
+        toggleOtherInput(otherChip, false);
+      }
+    }
+
+    function resetAll() {
+      localStorage.removeItem(STORAGE_KEY);
+      document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+
+      document.querySelectorAll('.chips').forEach(group => {
+        const multi = group.dataset.multi === 'true';
+        const chips = [...group.querySelectorAll('.chip')];
+        chips.forEach(c => {
+          c.classList.remove('active');
+          if (c.classList.contains('chip-other')) toggleOtherInput(c, false);
+        });
+
+        if (group.dataset.group === 'dialect') {
+          const kuwaitChip = chips.find(c => c.textContent.trim() === 'كويتية');
+          if (kuwaitChip) kuwaitChip.classList.add('active');
+        }
+
+        if (group.dataset.group === 'tone') {
+          chips.forEach(c => {
+            const txt = c.textContent.trim();
+            if (txt === 'ودّي وقريب' || txt === 'تعليمي وشارح') c.classList.add('active');
+          });
+        }
+
+        if (group.dataset.group === 'platforms') {
+          const insta = chips.find(c => c.textContent.trim() === 'انستقرام');
+          if (insta) insta.classList.add('active');
+        }
+
+        if (group.dataset.group === 'theme') {
+          const theme = chips.find(c => c.textContent.trim() === 'ستايل Claude — بيج وبرتقالي');
+          if (theme) theme.classList.add('active');
+        }
+      });
+
+      document.getElementById('outputBox').style.display = 'none';
+      updateProgress();
+      showStatus('تمت إعادة التعيين.');
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      const data = getIdentityData();
+      const summary = buildSummary(data);
+      const outputBox = document.getElementById('outputBox');
+      outputBox.style.display = 'block';
+      outputBox.textContent = summary;
+      outputBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      const data = getIdentityData();
+      const summary = buildSummary(data);
+      try {
+        await navigator.clipboard.writeText(summary);
+        showStatus('تم نسخ ملخص الهوية.');
+      } catch (e) {
+        showStatus('تعذر النسخ تلقائيًا. انسخي النص يدويًا من الملخص.');
+      }
+    });
+
+    document.getElementById('draftBtn').addEventListener('click', saveDraft);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+    document.querySelectorAll('input, textarea').forEach(el => {
+      el.addEventListener('input', updateProgress);
+    });
+
+    loadDraft();
+    updateProgress();
+  </script>
+</body>
+</html>

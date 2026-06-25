@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>طلب محتوى جديد — صانعة المحتوى</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121933;
+      --panel-2:#0f1730;
+      --border:rgba(255,255,255,.08);
+      --text:#f4f7ff;
+      --muted:#a9b3d1;
+      --accent:#c89b5f;
+      --accent-2:#4fd1c5;
+      --danger:#ff6b6b;
+      --ok:#4ade80;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(79,209,197,.12), transparent 30%),
+        radial-gradient(circle at top left, rgba(200,155,95,.10), transparent 28%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.7;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:32px 20px 60px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg, rgba(200,155,95,.16), rgba(79,209,197,.12));
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:24px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -80px -80px auto;
+      width:220px;
+      height:220px;
+      background:radial-gradient(circle, rgba(200,155,95,.18), transparent 65%);
+      pointer-events:none;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--accent);
+      font-size:13px;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:34px;
+      line-height:1.2;
+    }
+
+    .lead{
+      margin:0;
+      color:var(--muted);
+      max-width:900px;
+      font-size:16px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-head{
+      padding:18px 20px;
+      border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,.02);
+    }
+
+    .card-head h2{
+      margin:0;
+      font-size:20px;
+    }
+
+    .card-head p{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .card-body{
+      padding:20px;
+    }
+
+    .section{
+      margin-bottom:22px;
+      padding-bottom:18px;
+      border-bottom:1px dashed rgba(255,255,255,.08);
+    }
+
+    .section:last-child{
+      margin-bottom:0;
+      padding-bottom:0;
+      border-bottom:none;
+    }
+
+    .section-title{
+      margin:0 0 14px;
+      font-size:16px;
+      color:var(--accent);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .section-title .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow:0 0 0 6px rgba(79,209,197,.08);
+      flex:0 0 auto;
+    }
+
+    .field{
+      margin-bottom:16px;
+    }
+
+    .field:last-child{
+      margin-bottom:0;
+    }
+
+    label{
+      display:block;
+      margin-bottom:8px;
+      font-size:14px;
+      font-weight:700;
+      color:#fff;
+    }
+
+    .hint{
+      display:block;
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    input[type="text"],
+    textarea,
+    select{
+      width:100%;
+      border:1px solid rgba(255,255,255,.10);
+      background:var(--panel-2);
+      color:var(--text);
+      border-radius:14px;
+      padding:14px 14px;
+      outline:none;
+      font-size:14px;
+      transition:.2s ease;
+    }
+
+    textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus{
+      border-color:rgba(79,209,197,.5);
+      box-shadow:0 0 0 4px rgba(79,209,197,.10);
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .chip{
+      position:relative;
+      cursor:pointer;
+    }
+
+    .chip input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .chip span{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      font-size:14px;
+      transition:.2s ease;
+      user-select:none;
+    }
+
+    .chip input:checked + span{
+      border-color:transparent;
+      background:linear-gradient(135deg, rgba(200,155,95,.28), rgba(79,209,197,.22));
+      box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    @media (max-width: 720px){
+      .two-col{grid-template-columns:1fr}
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      border-radius:14px;
+      padding:14px 18px;
+      font-size:14px;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg, var(--accent), #d7b47f);
+      color:#111;
+      box-shadow:0 10px 30px rgba(200,155,95,.25);
+    }
+
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-secondary{
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    .btn-secondary:hover{background:rgba(255,255,255,.09)}
+
+    .side-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .side-box:last-child{margin-bottom:0}
+
+    .side-box h3{
+      margin:0 0 10px;
+      font-size:16px;
+      color:var(--accent);
+    }
+
+    .side-box p,
+    .side-box li{
+      color:var(--muted);
+      font-size:14px;
+      margin:0;
+    }
+
+    .side-box ul{
+      margin:0;
+      padding-right:18px;
+    }
+
+    .output{
+      white-space:pre-wrap;
+      background:#0a1022;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      padding:16px;
+      min-height:220px;
+      color:#eef3ff;
+      font-family: "Cascadia Code","Consolas","Courier New",monospace;
+      font-size:13px;
+      line-height:1.9;
+      direction:rtl;
+    }
+
+    .small-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .status{
+      margin-top:12px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .status.ok{color:var(--ok)}
+    .status.err{color:var(--danger)}
+
+    .footer-note{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.8;
+    }
+
+    .req{
+      color:#ffb4b4;
+      font-size:12px;
+      margin-inline-start:6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <section class="hero">
+      <div class="badge">صانعة المحتوى — نموذج الطلب التنفيذي</div>
+      <h1>طلب محتوى جديد</h1>
+      <p class="lead">
+        هذا النموذج مخصص لإرسال <strong>طلب المحتوى الحالي</strong> إلى صانعة المحتوى بشكل منظم.
+        بعد تعبئة البيانات والضغط على <strong>حفظ الطلب</strong>، سيظهر لك ملخص جاهز للنسخ واللصق داخل Claude ليتم بناء المخرج المناسب لك.
+      </p>
+    </section>
+
+    <div class="grid">
+      <!-- FORM -->
+      <section class="card">
+        <div class="card-head">
+          <h2>بيانات الطلب</h2>
+          <p>املأ الحقول التالية قدر الإمكان. ليس مطلوبًا أن تكون كل التفاصيل مثالية، لكن كل معلومة دقيقة ترفع جودة النتيجة.</p>
+        </div>
+
+        <div class="card-body">
+          <form id="contentRequestForm">
+
+            <!-- Section 1 -->
+            <div class="section">
+              <h3 class="section-title"><span class="dot"></span>نوع المخرج والمنصة</h3>
+
+              <div class="field">
+                <label>نوع المخرج <span class="req">* مطلوب</span></label>
+                <div class="chips" id="outputTypeGroup">
+                  <label class="chip"><input type="radio" name="outputType" value="سكريبت ريل"><span>سكريبت ريل</span></label>
+                  <label class="chip"><input type="radio" name="outputType" value="كاروسيل"><span>كاروسيل</span></label>
+                  <label class="chip"><input type="radio" name="outputType" value="كابشن"><span>كابشن</span></label>
+                  <label class="chip"><input type="radio" name="outputType" value="هوكات"><span>هوكات</span></label>
+                  <label class="chip"><input type="radio" name="outputType" value="باقة محتوى كاملة"><span>باقة محتوى كاملة</span></label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="platform">منصة هذا الطلب</label>
+                <select id="platform">
+                  <option value="">اختر المنصة</option>
+                  <option>إنستقرام</option>
+                  <option>تيك توك</option>
+                  <option>يوتيوب</option>
+                  <option>لينكدإن</option>
+                  <option>X / تويتر</option>
+                  <option>سناب شات</option>
+                  <option>فيسبوك</option>
+                  <option>أخرى</option>
+                </select>
+                <span class="hint">إذا كانت هويتك تشمل أكثر من منصة، حددي هنا المنصة الخاصة بهذا الطلب الحالي.</span>
+              </div>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="section">
+              <h3 class="section-title"><span class="dot"></span>هدف المحتوى وفكرته</h3>
+
+              <div class="field">
+                <label>الهدف من المحتوى</label>
+                <div class="chips" id="goalGroup">
+                  <label class="chip"><input type="radio" name="goal" value="زيادة الوعي"><span>زيادة الوعي</span></label>
+                  <label class="chip"><input type="radio" name="goal" value="رفع التفاعل"><span>رفع التفاعل</span></label>
+                  <label class="chip"><input type="radio" name="goal" value="بناء الثقة"><span>بناء الثقة</span></label>
+                  <label class="chip"><input type="radio" name="goal" value="بيع / تحويل"><span>بيع / تحويل</span></label>
+                  <label class="chip"><input type="radio" name="goal" value="إبراز الخبرة"><span>إبراز الخبرة</span></label>
+                  <label class="chip"><input type="radio" name="goal" value="تعليم"><span>تعليم</span></label>
+                  <label class="chip"><input type="radio" name="goal" value="جذب متابعين"><span>جذب متابعين</span></label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="topic">موضوع المحتوى <span class="req">* مهم</span></label>
+                <input id="topic" type="text" placeholder="مثال: كيف يبني المهندس براند شخصي على لينكدإن؟" />
+                <span class="hint">اكتبي الموضوع أو الفكرة الأساسية التي تريدين صناعة المحتوى حولها.</span>
+              </div>
+
+              <div class="field">
+                <label for="coreMessage">الرسالة الأساسية</label>
+                <textarea id="coreMessage" placeholder="مثال: البراند الشخصي ليس رفاهية، بل أصل مهني وتجاري يفتح فرصًا وشراكات وفرص دخل."></textarea>
+                <span class="hint">ما الرسالة أو النتيجة التي تريدين أن يخرج بها المتابع بعد رؤية المحتوى؟</span>
+              </div>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="section">
+              <h3 class="section-title"><span class="dot"></span>CTA وطول المحتوى</h3>
+
+              <div class="field">
+                <label>CTA</label>
+                <div class="chips" id="ctaGroup">
+                  <label class="chip"><input type="radio" name="cta" value="تابعني"><span>تابعني</span></label>
+                  <label class="chip"><input type="radio" name="cta" value="احفظ المنشور"><span>احفظ المنشور</span></label>
+                  <label class="chip"><input type="radio" name="cta" value="شارك المنشور"><span>شارك المنشور</span></label>
+                  <label class="chip"><input type="radio" name="cta" value="أرسل لي"><span>أرسل لي</span></label>
+                  <label class="chip"><input type="radio" name="cta" value="ادخل الرابط"><span>ادخل الرابط</span></label>
+                  <label class="chip"><input type="radio" name="cta" value="بدون CTA"><span>بدون CTA</span></label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="customCTA">CTA مخصص (اختياري)</label>
+                <input id="customCTA" type="text" placeholder="إذا أردتِ CTA مختلفًا اكتبيه هنا، وسيتم استخدامه بدل الخيارات الجاهزة." />
+              </div>
+
+              <div class="field">
+                <label>طول المحتوى</label>
+                <div class="chips" id="lengthGroup">
+                  <label class="chip"><input type="radio" name="length" value="قصير"><span>قصير</span></label>
+                  <label class="chip"><input type="radio" name="length" value="متوسط"><span>متوسط</span></label>
+                  <label class="chip"><input type="radio" name="length" value="مفصل"><span>مفصل</span></label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 4 -->
+            <div class="section">
+              <h3 class="section-title"><span class="dot"></span>خيارات التنفيذ</h3>
+
+              <div class="two-col">
+                <div class="field">
+                  <label>عدد النسخ المطلوبة</label>
+                  <div class="chips">
+                    <label class="chip"><input type="radio" name="variants" value="نسخة واحدة"><span>نسخة واحدة</span></label>
+                    <label class="chip"><input type="radio" name="variants" value="نسختان"><span>نسختان</span></label>
+                    <label class="chip"><input type="radio" name="variants" value="3 نسخ"><span>3 نسخ</span></label>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label>أكثر من زاوية؟</label>
+                  <div class="chips">
+                    <label class="chip"><input type="radio" name="angles" value="نعم"><span>نعم</span></label>
+                    <label class="chip"><input type="radio" name="angles" value="لا"><span>لا</span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="two-col">
+                <div class="field">
+                  <label>الالتزام بالهوية المحفوظة؟</label>
+                  <div class="chips">
+                    <label class="chip"><input type="radio" name="useIdentity" value="نعم"><span>نعم</span></label>
+                    <label class="chip"><input type="radio" name="useIdentity" value="لا"><span>لا</span></label>
+                  </div>
+                  <span class="hint">إذا اخترتِ نعم، ستبني صانعة المحتوى المخرج وفق الهوية المحفوظة لديك داخل المشروع.</span>
+                </div>
+
+                <div class="field">
+                  <label>نبرة خاصة لهذا الطلب؟ (اختياري)</label>
+                  <div class="chips">
+                    <label class="chip"><input type="radio" name="specialTone" value="مباشر"><span>مباشر</span></label>
+                    <label class="chip"><input type="radio" name="specialTone" value="رسمي"><span>رسمي</span></label>
+                    <label class="chip"><input type="radio" name="specialTone" value="تعليمي"><span>تعليمي</span></label>
+                    <label class="chip"><input type="radio" name="specialTone" value="حماسي"><span>حماسي</span></label>
+                    <label class="chip"><input type="radio" name="specialTone" value="قصصي"><span>قصصي</span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="notes">ملاحظات إضافية</label>
+                <textarea id="notes" placeholder="مثال: أبيه يخاطب مهندسين شباب، بدون مبالغة، ويكون مناسب لريل قصير أو كاروسيل قابل للحفظ."></textarea>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="button" class="btn-primary" id="saveBtn">حفظ الطلب</button>
+              <button type="button" class="btn-secondary" id="resetBtn">مسح النموذج</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- OUTPUT / GUIDE -->
+      <aside class="card">
+        <div class="card-head">
+          <h2>الملخص الجاهز للإرسال</h2>
+          <p>بعد الضغط على <strong>حفظ الطلب</strong>، انسخي هذا الملخص وأرسليه داخل Claude لتبدأ صانعة المحتوى في التنفيذ.</p>
+        </div>
+
+        <div class="card-body">
+          <div class="side-box">
+            <h3>طريقة الاستخدام السريعة</h3>
+            <ul>
+              <li>املئي بيانات الطلب الحالي.</li>
+              <li>اضغطي <strong>حفظ الطلب</strong>.</li>
+              <li>انسخي الملخص النهائي من الصندوق أدناه.</li>
+              <li>ألصقيه داخل محادثة Claude في مشروع <strong>صانعة المحتوى</strong>.</li>
+            </ul>
+          </div>
+
+          <div class="side-box">
+            <h3>متى أستخدم هذا النموذج؟</h3>
+            <p>
+              استخدميه عندما تكون هويتك محفوظة مسبقًا وتريدين إرسال طلب جديد بشكل منظم،
+              أو عندما تريدين تحديد الهدف والمنصة والرسالة وعدد النسخ بدقة.
+            </p>
+          </div>
+
+          <div class="output" id="outputBox">سيظهر هنا ملخص طلبك بعد الحفظ...</div>
+
+          <div class="small-actions">
+            <button type="button" class="btn-secondary" id="copyBtn">نسخ الملخص</button>
+          </div>
+
+          <div class="status" id="statusMsg"></div>
+
+          <p class="footer-note">
+            ملاحظة: إذا لم تعبئي بعض الحقول الاختيارية، سيظل بإمكان صانعة المحتوى تنفيذ الطلب إن كانت البيانات الأساسية كافية.
+            كلما كانت البيانات أوضح، كانت النتيجة أكثر دقة وتخصيصًا.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+    const outputBox = $("#outputBox");
+    const statusMsg = $("#statusMsg");
+
+    function getCheckedValue(name){
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : "";
+    }
+
+    function setStatus(message, type=""){
+      statusMsg.textContent = message || "";
+      statusMsg.className = "status" + (type ? ` ${type}` : "");
+    }
+
+    function clean(value){
+      return (value || "").trim();
+    }
+
+    function buildSummary(){
+      const outputType = getCheckedValue("outputType");
+      const platform = clean($("#platform").value);
+      const goal = getCheckedValue("goal");
+      const topic = clean($("#topic").value);
+      const coreMessage = clean($("#coreMessage").value);
+      const ctaSelected = getCheckedValue("cta");
+      const customCTA = clean($("#customCTA").value);
+      const finalCTA = customCTA || ctaSelected;
+      const length = getCheckedValue("length");
+      const variants = getCheckedValue("variants");
+      const angles = getCheckedValue("angles");
+      const useIdentity = getCheckedValue("useIdentity");
+      const specialTone = getCheckedValue("specialTone");
+      const notes = clean($("#notes").value);
+
+      // Validation
+      if(!outputType){
+        setStatus("يرجى اختيار نوع المخرج أولًا.", "err");
+        return null;
+      }
+
+      if(!topic){
+        setStatus("يرجى كتابة موضوع المحتوى على الأقل قبل الحفظ.", "err");
+        return null;
+      }
+
+      const lines = [];
+      lines.push("طلب محتوى جديد — صانعة المحتوى");
+      lines.push("");
+      lines.push(`نوع المخرج: ${outputType}`);
+      lines.push(`منصة هذا الطلب: ${platform || "غير محدد"}`);
+      lines.push(`الهدف: ${goal || "غير محدد"}`);
+      lines.push(`موضوع المحتوى: ${topic}`);
+      lines.push(`الرسالة الأساسية: ${coreMessage || "غير محدد"}`);
+      lines.push(`CTA: ${finalCTA || "غير محدد"}`);
+      lines.push(`طول المحتوى: ${length || "غير محدد"}`);
+      lines.push(`عدد النسخ المطلوبة: ${variants || "غير محدد"}`);
+      lines.push(`أكثر من زاوية: ${angles || "غير محدد"}`);
+      lines.push(`الالتزام بالهوية المحفوظة: ${useIdentity || "غير محدد"}`);
+      lines.push(`نبرة خاصة لهذا الطلب: ${specialTone || "غير محدد"}`);
+      lines.push(`ملاحظات إضافية: ${notes || "لا يوجد"}`);
+
+      return lines.join("\n");
+    }
+
+    $("#saveBtn").addEventListener("click", () => {
+      const summary = buildSummary();
+      if(!summary) return;
+
+      outputBox.textContent = summary;
+      setStatus("تم تجهيز ملخص الطلب بنجاح. يمكنك الآن نسخه وإرساله داخل Claude.", "ok");
+    });
+
+    $("#copyBtn").addEventListener("click", async () => {
+      const text = outputBox.textContent.trim();
+
+      if(!text || text === "سيظهر هنا ملخص طلبك بعد الحفظ..."){
+        setStatus("لا يوجد ملخص جاهز للنسخ بعد. اضغطي حفظ الطلب أولًا.", "err");
+        return;
+      }
+
+      try{
+        await navigator.clipboard.writeText(text);
+        setStatus("تم نسخ ملخص الطلب بنجاح.", "ok");
+      }catch(err){
+        setStatus("تعذر النسخ التلقائي. انسخي الملخص يدويًا من الصندوق.", "err");
+      }
+    });
+
+    $("#resetBtn").addEventListener("click", () => {
+      $("#contentRequestForm").reset();
+      outputBox.textContent = "سيظهر هنا ملخص طلبك بعد الحفظ...";
+      setStatus("تم مسح النموذج.", "ok");
+    });
+  </script>
+</body>
+</html>
